@@ -1,0 +1,47 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: 07-github-tt
+  namespace: default
+spec:
+  params:
+    - name: git-repository-url
+    - name: git-revision
+    - name: is-feature-branch
+    - name: image-tag
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: go-pipeline-run-
+        namespace: default
+      spec:
+        pipelineRef:
+          name: go-pipeline
+        podTemplate:
+          securityContext:
+            fsGroup: 65532 # to make the volumes accessible by the non-root user, we need to either configure the permissions manually or set the fsGroup
+        params:
+          - name: git-url
+            value: $(tt.params.git-repository-url)
+          - name: git-revision
+            value: $(tt.params.git-revision)
+          - name: image-tag
+            value: $(tt.params.image-tag)
+          - name: is-feature-branch
+            value: $(tt.params.is-feature-branch)
+        workspaces:
+          - name: shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce # access mode may affect how you can use this volume in parallel tasks
+                resources:
+                  requests:
+                    storage: 10Mi
+          - name: dockerconfig-ws
+            secret:
+              secretName: dockerconfig-secret
+          - emptyDir:
+              medium: Memory
+            name: helm-workspace

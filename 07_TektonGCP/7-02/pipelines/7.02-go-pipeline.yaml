@@ -1,0 +1,98 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: 07-go-pipeline
+  namespace: default
+spec:
+  workspaces:
+    - name: shared-workspace
+    - name: helm-workspace
+    - name: dockerconfig-ws
+  params:
+    - name: git-url
+      description: Git Repo example golang-app
+      type: string
+      default: https://github.com/c-linse/go-add-app
+    - name: git-revision
+      description: revision to be used from repo of the code for deployment
+      type: string
+      default: master
+    - name: is-feature-branch
+      description: revision to be used from repo of the code for deployment
+      type: string
+      default: false
+    - name: image-repository
+      description: Image registry where images are going to be pushed
+      type: string
+      default: quay.io/christoph_linse
+    - name: image-name
+      description: Image name
+      type: string
+      default: go-add-app
+    - name: image-tag
+      description: Default image tag
+      type: string
+      default: latest
+  tasks:
+    - name: fetch-source
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: deleteExisting
+          value: "true"
+        - name: revision
+          value: $(params.git-revision)
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: lint-code
+      taskRef:
+        name: golangci-lint
+      params:
+        - name: package
+          value: go-add-app
+        - name: flags
+          value: --verbose
+        - name: version
+          value: v1.21
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - fetch-source
+    - name: build-image
+      taskRef:
+        name: buildah
+      params:
+        - name: IMAGE
+          value: $(params.image-repository)/$(params.image-name):$(params.image-tag)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: dockerconfig
+          workspace: dockerconfig-ws
+      runAfter:
+        - lint-code
+      when:
+        - input: "$(params.is-feature-branch)"
+          operator: in
+          values: [ "false" ]
+    - name: build-helm
+      taskRef:
+        name: helm-build-push
+      params:
+        - name: HELM_CHART_NAME
+          value: go-add-app-chart
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: helm-repo
+          workspace: helm-workspace
+      runAfter:
+        - build-image
+      when:
+        - input: "$(params.is-feature-branch)"
+          operator: in
+          values: [ "false" ]
