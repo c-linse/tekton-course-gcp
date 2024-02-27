@@ -8,7 +8,7 @@ spec:
     - name: git-repository-url
     - name: git-revision
     - name: image-tag
-    - name: image-name
+    - name: app-name
     - name: is-feature-branch
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
@@ -18,7 +18,7 @@ spec:
         namespace: default
       spec:
         pipelineRef:
-          name: go-pipeline
+          name: 07-go-pipeline
         podTemplate:
           securityContext:
             fsGroup: 65532 # to make the volumes accessible by the non-root user, we need to either configure the permissions manually or set the fsGroup
@@ -27,10 +27,10 @@ spec:
             value: $(tt.params.git-repository-url)
           - name: git-revision
             value: $(tt.params.git-revision)
+          - name: app-name
+            value: $(tt.params.app-name)
           - name: image-tag
             value: $(tt.params.image-tag)
-          - name: image-name
-            value: $(tt.params.image-name)
           - name: is-feature-branch
             value: $(tt.params.is-feature-branch)
         workspaces:

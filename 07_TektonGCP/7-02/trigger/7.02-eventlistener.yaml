@@ -4,7 +4,7 @@ metadata:
   name: 07-github-el
 spec:
   triggers:
-    - triggerRef: github-trigger
+    - triggerRef: 07-github-trigger
   serviceAccountName: tekton-triggers-example-sa
 ---
 apiVersion: v1
