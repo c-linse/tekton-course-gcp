@@ -16,7 +16,7 @@ spec:
       params:
         - name: "secretRef"
           value:
-            secretName: github-interceptor-secret
+            secretName: 07-github-interceptor-secret
             secretKey: token
     - ref:
         name: "cel"
@@ -24,11 +24,8 @@ spec:
         - name: overlays
           value:
             - key: image-tag
-              expression: body.ref.split('/')[2].replace('master','latest')
-    - ref:
-        name: "cel"
-      params:
-        - name: overlays
-          value:
+              expression: body.ref.split('/')[2].replace('main','latest')
+            - key: chart-tag
+              expression: body.ref.split('/')[2].replace('main','1.0.0')
             - key: is-feature-branch
               expression: body.ref.matches('feature/.*')

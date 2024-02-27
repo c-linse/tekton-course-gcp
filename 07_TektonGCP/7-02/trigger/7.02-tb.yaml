@@ -9,6 +9,8 @@ spec:
       value: $(body.repository.clone_url)
     - name: git-revision
       value: $(body.head_commit.id)
+    - name: app-name
+      value: $(body.repository.name)
     - name: image-tag
       value: $(extensions.image-tag)
     - name: is-feature-branch

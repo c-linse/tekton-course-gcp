@@ -12,11 +12,10 @@ spec:
     - name: git-url
       description: Git Repo example golang-app
       type: string
-      default: https://github.com/c-linse/go-add-app
     - name: git-revision
       description: revision to be used from repo of the code for deployment
       type: string
-      default: master
+      default: main
     - name: is-feature-branch
       description: revision to be used from repo of the code for deployment
       type: string
@@ -25,14 +24,17 @@ spec:
       description: Image registry where images are going to be pushed
       type: string
       default: quay.io/christoph_linse
-    - name: image-name
-      description: Image name
+    - name: app-name
+      description: App name to be used for container-image and helm-chart build
       type: string
-      default: go-add-app
     - name: image-tag
-      description: Default image tag
+      description: Default container-image tag
       type: string
       default: latest
+    - name: chart-tag
+      description: Default helm-chart tag
+      type: string
+      default: 1.0.0
   tasks:
     - name: fetch-source
       params:
@@ -67,7 +69,7 @@ spec:
         name: buildah
       params:
         - name: IMAGE
-          value: $(params.image-repository)/$(params.image-name):$(params.image-tag)
+          value: $(params.image-repository)/$(params.app-name):$(params.image-tag)
       workspaces:
         - name: source
           workspace: shared-workspace
@@ -81,10 +83,12 @@ spec:
           values: [ "false" ]
     - name: build-helm
       taskRef:
-        name: helm-build-push
+        name: 07-helm-build-push
       params:
         - name: HELM_CHART_NAME
-          value: go-add-app-chart
+          value: "$(params.app-name)"
+        - name: HELM_CHART_TAG
+          value: "$(params.chart-tag)"
       workspaces:
         - name: source
           workspace: shared-workspace

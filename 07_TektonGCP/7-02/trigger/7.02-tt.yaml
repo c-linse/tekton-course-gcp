@@ -7,8 +7,9 @@ spec:
   params:
     - name: git-repository-url
     - name: git-revision
-    - name: is-feature-branch
     - name: image-tag
+    - name: image-name
+    - name: is-feature-branch
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -28,6 +29,8 @@ spec:
             value: $(tt.params.git-revision)
           - name: image-tag
             value: $(tt.params.image-tag)
+          - name: image-name
+            value: $(tt.params.image-name)
           - name: is-feature-branch
             value: $(tt.params.is-feature-branch)
         workspaces:
@@ -41,7 +44,7 @@ spec:
                     storage: 10Mi
           - name: dockerconfig-ws
             secret:
-              secretName: dockerconfig-secret
-          - emptyDir:
+              secretName: 07-dockerconfig-secret
+          - name: helm-workspace
+            emptyDir:
               medium: Memory
-            name: helm-workspace
