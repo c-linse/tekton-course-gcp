@@ -1,0 +1,28 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: deployer-dev-rolebinding
+  namespace: dev
+subjects:
+  - kind: ServiceAccount
+    name: deployer-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: deployer-role-dev
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: deployer-qa-rolebinding
+  namespace: qa
+subjects:
+  - kind: ServiceAccount
+    name: deployer-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: deployer-role-qa
+  apiGroup: rbac.authorization.k8s.io
+

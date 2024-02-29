@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+ #!/usr/bin/env bash
 set -e
 
 kubectl config use gke_peerless-fabric-414907_europe-west3-c_tekton-cluster
@@ -8,6 +8,7 @@ kubectl delete pipelinerun --all
 
 #kubectl apply -f ./secrets/
 kubectl apply -f ./tasks/
+kubectl apply -f ./rbac/
 kubectl apply -f ./pipelines/
 kubectl apply -f ./trigger/
 
@@ -17,3 +18,4 @@ tkn hub install task git-clone --version 0.9 --namespace default
 tkn hub install task golangci-lint --version 0.2 --namespace default
 tkn hub install task golang-test --version 0.2 --namespace default
 tkn hub install task buildah --version 0.7 --namespace default
+tkn hub install task helm-upgrade-from-repo --version 0.2 --namespace default
