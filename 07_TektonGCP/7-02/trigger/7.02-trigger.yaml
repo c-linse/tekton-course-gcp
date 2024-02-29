@@ -23,9 +23,11 @@ spec:
       params:
         - name: overlays
           value:
+            - key: is-main-branch
+              expression: body.ref.matches('refs/heads/main')
+            - key: is-git-tag
+              expression: body.ref.matches('refs/tags/.*')
             - key: image-tag
               expression: body.ref.split('/')[2].replace('main','latest')
             - key: chart-tag
               expression: body.ref.split('/')[2].replace('main','1.0.0')
-            - key: is-feature-branch
-              expression: body.ref.matches('feature/.*')

@@ -10,7 +10,8 @@ spec:
     - name: image-tag
     - name: chart-tag
     - name: app-name
-    - name: is-feature-branch
+    - name: is-main-branch
+    - name: is-git-tag
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -39,8 +40,10 @@ spec:
             value: $(tt.params.image-tag)
           - name: chart-tag
             value: $(tt.params.chart-tag)
-          - name: is-feature-branch
-            value: $(tt.params.is-feature-branch)
+          - name: is-main-branch
+            value: $(tt.params.is-main-branch)
+          - name: is-git-tag
+            value: $(tt.params.is-git-tag)
         workspaces:
           - name: shared-workspace
             volumeClaimTemplate:

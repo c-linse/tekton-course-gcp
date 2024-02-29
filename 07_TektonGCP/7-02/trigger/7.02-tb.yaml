@@ -15,5 +15,7 @@ spec:
       value: $(extensions.image-tag)
     - name: chart-tag
       value: $(extensions.chart-tag)
-    - name: is-feature-branch
-      value: $(extensions.is-feature-branch)
+    - name: is-main-branch
+      value: $(extensions.is-main-branch)
+    - name: is-git-tag
+      value: $(extensions.is-git-tag)

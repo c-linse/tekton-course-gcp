@@ -16,7 +16,11 @@ spec:
       description: revision to be used from repo of the code for deployment
       type: string
       default: main
-    - name: is-feature-branch
+    - name: is-main-branch
+      description: revision to be used from repo of the code for deployment
+      type: string
+      default: false
+    - name: is-git-tag
       description: revision to be used from repo of the code for deployment
       type: string
       default: false
@@ -78,9 +82,9 @@ spec:
       runAfter:
         - lint-code
       when:
-        - input: "$(params.is-feature-branch)"
+        - input: "true"
           operator: in
-          values: [ "false" ]
+          values: [ "$(params.is-main-branch)", "$(params.is-git-tag)" ]
     - name: build-helm
       taskRef:
         name: 07-helm-build-push
@@ -96,6 +100,10 @@ spec:
           workspace: helm-workspace
       runAfter:
         - build-image
+      when:
+        - input: "true"
+          operator: in
+          values: [ "$(params.is-main-branch)", "$(params.is-git-tag)" ]
     - name: deploy-dev
       taskRef:
         name: helm-upgrade-from-repo
@@ -113,9 +121,9 @@ spec:
       runAfter:
         - build-helm
       when:
-        - input: "$(params.image-tag)"
+        - input: "true"
           operator: in
-          values: [ "latest" ]
+          values: [ "$(params.is-main-branch)" ]
     - name: deploy-qa
       taskRef:
         name: helm-upgrade-from-repo
@@ -133,6 +141,6 @@ spec:
       runAfter:
         - build-helm
       when:
-        - input: "$(params.image-tag)"
-          operator: notin
-          values: [ "latest" ]
+        - input: "true"
+          operator: in
+          values: [ "$(params.is-git-tag)" ]
