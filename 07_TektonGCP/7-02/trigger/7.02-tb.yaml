@@ -13,5 +13,7 @@ spec:
       value: $(body.repository.name)
     - name: image-tag
       value: $(extensions.image-tag)
+    - name: chart-tag
+      value: $(extensions.chart-tag)
     - name: is-feature-branch
       value: $(extensions.is-feature-branch)

@@ -8,6 +8,7 @@ spec:
     - name: git-repository-url
     - name: git-revision
     - name: image-tag
+    - name: chart-tag
     - name: app-name
     - name: is-feature-branch
   resourcetemplates:
@@ -22,6 +23,11 @@ spec:
         podTemplate:
           securityContext:
             fsGroup: 65532 # to make the volumes accessible by the non-root user, we need to either configure the permissions manually or set the fsGroup
+        taskRunSpecs:
+          - pipelineTaskName: deploy-dev
+            taskServiceAccountName: deployer-sa
+          - pipelineTaskName: deploy-qa
+            taskServiceAccountName: deployer-sa
         params:
           - name: git-url
             value: $(tt.params.git-repository-url)
@@ -31,6 +37,8 @@ spec:
             value: $(tt.params.app-name)
           - name: image-tag
             value: $(tt.params.image-tag)
+          - name: chart-tag
+            value: $(tt.params.chart-tag)
           - name: is-feature-branch
             value: $(tt.params.is-feature-branch)
         workspaces:

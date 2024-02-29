@@ -96,7 +96,43 @@ spec:
           workspace: helm-workspace
       runAfter:
         - build-image
+    - name: deploy-dev
+      taskRef:
+        name: helm-upgrade-from-repo
+      params:
+        - name: helm_repo
+          value: https://c-linse.github.io/tekton-course-charts
+        - name: chart_name
+          value: "tekton-course-charts/$(params.app-name)"
+        - name: release_version
+          value: "$(params.chart-tag)"
+        - name: release_name
+          value: "$(params.app-name)"
+        - name: release_namespace
+          value: dev
+      runAfter:
+        - build-helm
       when:
-        - input: "$(params.is-feature-branch)"
+        - input: "$(params.image-tag)"
           operator: in
-          values: [ "false" ]
+          values: [ "latest" ]
+    - name: deploy-qa
+      taskRef:
+        name: helm-upgrade-from-repo
+      params:
+        - name: helm_repo
+          value: https://c-linse.github.io/tekton-course-charts
+        - name: chart_name
+          value: "tekton-course-charts/$(params.app-name)"
+        - name: release_version
+          value: "$(params.chart-tag)"
+        - name: release_name
+          value: "$(params.app-name)"
+        - name: release_namespace
+          value: qa
+      runAfter:
+        - build-helm
+      when:
+        - input: "$(params.image-tag)"
+          operator: notin
+          values: [ "latest" ]
