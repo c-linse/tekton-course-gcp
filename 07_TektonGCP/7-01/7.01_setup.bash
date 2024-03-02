@@ -12,7 +12,7 @@ kubectl config current-context
 kubectl apply --filename "https://storage.googleapis.com/tekton-releases/pipeline/previous/${tekton_version}/release.yaml"
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/previous/${tekton_triggers_version}/release.yaml
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/previous/${tekton_triggers_version}/interceptors.yaml
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/previous/${tekton_dashboard_version}/release-full.yaml
+kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/previous/${tekton_dashboard_version}/release.yaml
 
 echo "Setup has been finished. Checkout with the following commands:"
 printf "%s\t" "kubectl get pods -n tekton-pipelines"

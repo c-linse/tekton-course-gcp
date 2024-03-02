@@ -14,8 +14,9 @@ kubectl apply -f ./trigger/
 
 kubectl patch serviceaccount default -n default --patch '{"secrets": [{"name": "07-git-credentials"}]}'
 
-tkn hub install task git-clone --version 0.9 --namespace default
-tkn hub install task golangci-lint --version 0.2 --namespace default
-tkn hub install task golang-test --version 0.2 --namespace default
-tkn hub install task buildah --version 0.7 --namespace default
-tkn hub install task helm-upgrade-from-repo --version 0.2 --namespace default
+tkn hub install task git-clone --version 0.9 --namespace default || true
+tkn hub install task golangci-lint --version 0.2 --namespace default || true
+tkn hub install task golang-test --version 0.2 --namespace default || true
+tkn hub install task buildah --version 0.7 --namespace default || true
+tkn hub install task helm-upgrade-from-repo --version 0.2 --namespace default || true
+tkn hub install task github-set-status --version 0.4 --namespace default || true

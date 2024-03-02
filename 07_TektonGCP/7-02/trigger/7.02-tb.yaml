@@ -7,6 +7,8 @@ spec:
   params:
     - name: git-repository-url
       value: $(body.repository.clone_url)
+    - name: git-repo-full-name
+      value: $(body.repository.full_name)
     - name: git-revision
       value: $(body.head_commit.id)
     - name: app-name
