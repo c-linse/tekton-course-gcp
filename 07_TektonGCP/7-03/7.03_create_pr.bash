@@ -3,4 +3,4 @@ set -e
 
 kubectl delete pipelinerun --all
 
-kubectl apply -f pr.yaml
+kubectl apply -f 7.03_pr.yaml
