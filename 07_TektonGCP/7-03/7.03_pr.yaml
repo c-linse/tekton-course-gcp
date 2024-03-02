@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: go-pipeline-run
+  namespace: default
+spec:
+  pipelineRef:
+    name: 07-go-pipeline
+  podTemplate:
+    securityContext:
+      fsGroup: 65532 # to make the volumes accessible by the non-root user, we need to either configure the permissions manually or set the fsGroup
+  taskRunSpecs:
+    - pipelineTaskName: deploy-dev
+      taskServiceAccountName: deployer-sa
+    - pipelineTaskName: deploy-qa
+      taskServiceAccountName: deployer-sa
+  params:
+    - name: git-url
+      value: https://github.com/c-linse/go-add-app.git
+    - name: git-revision
+      value: main
+    - name: app-name
+      value: go-add-app
+    - name: image-tag
+      value: latest
+    - name: chart-tag
+      value: 1.0.0
+    - name: is-main-branch
+      value: true
+    - name: is-git-tag
+      value: false
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce # access mode may affect how you can use this volume in parallel tasks
+          resources:
+            requests:
+              storage: 10Mi
+    - name: dockerconfig-ws
+      secret:
+        secretName: 07-dockerconfig-secret
+    - name: helm-workspace
+      emptyDir:
+        medium: Memory

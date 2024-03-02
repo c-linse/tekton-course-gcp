@@ -6,10 +6,10 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["secrets", "configmaps", "deployments", "serviceaccounts","services"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
   - apiGroups: ["apps"]
     resources: ["deployments", "replicasets"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
 
 ---
 kind: Role
@@ -20,7 +20,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["secrets", "configmaps", "deployments", "serviceaccounts", "services"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
   - apiGroups: ["apps"]
     resources: ["deployments", "replicasets"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
