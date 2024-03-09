@@ -42,6 +42,9 @@ spec:
       description: Default helm-chart tag
       type: string
       default: 1.0.0
+    - name: golang-version
+      type: string
+      default: "1.22"
   tasks:
     - name: notify-github
       taskRef:
@@ -70,16 +73,29 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
+    - name: test-code
+      taskRef:
+        name: golang-test
+      params:
+        - name: package
+          value: "$(params.app-name)"
+        - name: version
+          value: "$(params.golang-version)"
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - fetch-source
     - name: lint-code
       taskRef:
         name: golangci-lint
       params:
         - name: package
-          value: go-add-app
+          value: "$(params.app-name)"
         - name: flags
           value: --verbose
         - name: version
-          value: v1.21
+          value: "v$(params.golang-version)"
       workspaces:
         - name: source
           workspace: shared-workspace
@@ -98,6 +114,7 @@ spec:
           workspace: dockerconfig-ws
       runAfter:
         - lint-code
+        - test-code
       when:
         - input: "true"
           operator: in
