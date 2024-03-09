@@ -16,6 +16,9 @@ spec:
       description: revision to be used from repo of the code for deployment
       type: string
       default: main
+    - name: git-repo-full-name
+      description: used to leverage git status api
+      type: string
     - name: is-main-branch
       description: revision to be used from repo of the code for deployment
       type: string
@@ -40,7 +43,23 @@ spec:
       type: string
       default: 1.0.0
   tasks:
+    - name: notify-github
+      taskRef:
+        name: github-set-status
+      params:
+        - name: REPO_FULL_NAME
+          value: "$(params.git-repo-full-name)"
+        - name: SHA
+          value: "$(params.git-revision)"
+        - name: DESCRIPTION
+          value: "Build has started"
+        - name: STATE
+          value: pending
+        - name: TARGET_URL
+          value: "http://localhost:9097/#/pipelineruns"
     - name: fetch-source
+      taskRef:
+        name: git-clone
       params:
         - name: url
           value: $(params.git-url)
@@ -48,8 +67,6 @@ spec:
           value: "true"
         - name: revision
           value: $(params.git-revision)
-      taskRef:
-        name: git-clone
       workspaces:
         - name: output
           workspace: shared-workspace
@@ -144,3 +161,22 @@ spec:
         - input: "true"
           operator: in
           values: [ "$(params.is-git-tag)" ]
+  finally:
+    - name: notify-git-state-success
+      taskRef:
+        name: github-set-status
+      when:
+        - input: "$(tasks.status)"
+          operator: notin
+          values: [ "Failure" ]
+      params:
+        - name: REPO_FULL_NAME
+          value: "$(params.git-repo-full-name)"
+        - name: SHA
+          value: "$(params.git-revision)"
+        - name: DESCRIPTION
+          value: "Build has been successful"
+        - name: STATE
+          value: success
+        - name: TARGET_URL
+          value: "http://localhost:9097/#/pipelineruns"
