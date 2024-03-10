@@ -184,8 +184,8 @@ spec:
         name: github-set-status
       when:
         - input: "$(tasks.status)"
-          operator: notin
-          values: [ "Failure" ]
+          operator: in
+          values: [ "Success" ]
       params:
         - name: REPO_FULL_NAME
           value: "$(params.git-repo-full-name)"
