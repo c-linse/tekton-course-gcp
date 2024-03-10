@@ -11,7 +11,7 @@ tkn pipeline start \
 --param app-name="go-add-app" \
 --param image-tag="latest" \
 --param chart-tag="1.0.0" \
---param is-main-branch=true \
+--param is-main-branch=false \
 -w name=shared-workspace,claimName=07-test \
 -w name=dockerconfig-ws,secret=07-dockerconfig-secret \
 -w name=helm-workspace,emptyDir=Memory \
