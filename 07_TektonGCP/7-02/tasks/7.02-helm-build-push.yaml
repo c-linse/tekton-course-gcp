@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
-  name: 07-helm-build-push
+  name: 7-02-helm-build-push
 spec:
   description: This task run helm lint and packages a helm chart to tar.gz and pushes it into a webserver
   params:

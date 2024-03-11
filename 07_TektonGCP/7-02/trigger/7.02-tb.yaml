@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
-  name: 07-github-tb
+  name: 7-02-github-tb
   namespace: default
 spec:
   params:

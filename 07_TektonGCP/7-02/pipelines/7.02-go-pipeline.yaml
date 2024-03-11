@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: 07-go-pipeline
+  name: 7-02-go-pipeline
   namespace: default
 spec:
   workspaces:
@@ -10,21 +10,21 @@ spec:
     - name: dockerconfig-ws
   params:
     - name: git-url
-      description: Git Repo example golang-app
+      description: Git Repo to checkout the desired git repository
       type: string
     - name: git-revision
-      description: revision to be used from repo of the code for deployment
+      description: Revision to be used from repo of the code for building and testing
       type: string
       default: main
     - name: git-repo-full-name
-      description: used to leverage git status api
+      description: Used to leverage git status api
       type: string
     - name: is-main-branch
-      description: revision to be used from repo of the code for deployment
+      description: Flag to be used for conditional pipeline executing (CI CD up to dev namespace)
       type: string
       default: false
     - name: is-git-tag
-      description: revision to be used from repo of the code for deployment
+      description: Flag to be used for conditional pipeline executing (CI CD up to qa namespace)
       type: string
       default: false
     - name: image-repository
@@ -35,14 +35,15 @@ spec:
       description: App name to be used for container-image and helm-chart build
       type: string
     - name: image-tag
-      description: Default container-image tag
+      description: Container-image tag to be used
       type: string
       default: latest
     - name: chart-tag
-      description: Default helm-chart tag
+      description: Default helm-chart tag to be used
       type: string
       default: 1.0.0
     - name: golang-version
+      description: Version of golang to be used
       type: string
       default: "1.22"
   tasks:
@@ -121,7 +122,7 @@ spec:
           values: [ "$(params.is-main-branch)", "$(params.is-git-tag)" ]
     - name: build-helm
       taskRef:
-        name: 07-helm-build-push
+        name: 7-02-helm-build-push
       params:
         - name: HELM_CHART_NAME
           value: "$(params.app-name)"

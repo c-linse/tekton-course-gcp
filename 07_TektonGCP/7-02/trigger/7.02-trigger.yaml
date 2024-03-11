@@ -1,13 +1,13 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: Trigger
 metadata:
-  name: 07-github-trigger
+  name: 7-02-github-trigger
   namespace: default
 spec:
   bindings:
-    - ref: 07-github-tb
+    - ref: 7-02-github-tb
   template:
-    ref: 07-github-tt
+    ref: 7-02-github-tt
   interceptors:
     - ref:
         name: "github"
@@ -16,7 +16,7 @@ spec:
       params:
         - name: "secretRef"
           value:
-            secretName: 07-github-interceptor-secret
+            secretName: 7-02-github-interceptor-secret
             secretKey: token
     - ref:
         name: "cel"
