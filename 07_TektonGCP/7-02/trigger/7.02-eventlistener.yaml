@@ -1,11 +1,11 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: 07-github-el
+  name: 7-02-github-el
 spec:
   triggers:
-    - triggerRef: 07-github-trigger
-  serviceAccountName: tekton-triggers-example-sa
+    - triggerRef: 7-02-github-trigger
+  serviceAccountName: 7-02-tekton-triggers-sa
 ---
 apiVersion: v1
 kind: Service
@@ -13,7 +13,7 @@ metadata:
   name: lb-tekton-event-listener-service
 spec:
   selector:
-    eventlistener: 07-github-el
+    eventlistener: 7-02-github-el
   ports:
     - protocol: TCP
       port: 80

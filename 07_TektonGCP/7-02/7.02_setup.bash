@@ -12,7 +12,7 @@ kubectl apply -f ./rbac/
 kubectl apply -f ./pipelines/
 kubectl apply -f ./trigger/
 
-kubectl patch serviceaccount default -n default --patch '{"secrets": [{"name": "07-git-repo-secret"}]}'
+kubectl patch serviceaccount default -n default --patch '{"secrets": [{"name": "7-02-git-repo-secret"}]}'
 
 tkn hub install task git-clone --version 0.9 --namespace default || true
 tkn hub install task golangci-lint --version 0.2 --namespace default || true
