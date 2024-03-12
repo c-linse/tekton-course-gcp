@@ -16,4 +16,4 @@ kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboar
 
 echo "Setup has been finished. Checkout with the following commands:"
 printf "%s\t" "kubectl get pods -n tekton-pipelines"
-printf "\n%s\n" "kubectl get pods -n tekton-pipeline-resolvers"
+printf "\n%s\n" "kubectl get pods -n tekton-pipelines-resolvers"
