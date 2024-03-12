@@ -10,10 +10,10 @@ spec:
     - name: dockerconfig-ws
   params:
     - name: git-url
-      description: Git Repo to checkout the desired git repository
+      description: Git repo to checkout the desired code base
       type: string
     - name: git-revision
-      description: Revision to be used from repo of the code for building and testing
+      description: Revision to be used from repo of the code
       type: string
       default: main
     - name: git-repo-full-name
